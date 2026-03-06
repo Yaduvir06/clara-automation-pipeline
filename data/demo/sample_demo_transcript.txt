@@ -1,0 +1,31 @@
+[Demo Call Recording - Springfield Fire Protection]
+
+Agent: Thanks for your interest in Clara! Can you tell me about your business?
+
+Client: Sure, we're Springfield Fire Protection. We've been in business for 15 years. We handle fire sprinkler installations, inspections, and maintenance. We also do fire alarm systems.
+
+Agent: Great. What are your typical business hours?
+
+Client: We're open Monday through Friday, 8 AM to 5 PM. We're closed weekends.
+
+Agent: And what about after-hours calls? Do you get emergency calls?
+
+Client: Oh yeah, all the time. Sprinkler leaks, fire alarms going off, system failures. Those are our emergencies. We have an on-call technician who handles those.
+
+Agent: How do you currently route those calls?
+
+Client: Right now, if it's an emergency after hours, the answering service patches them through to our on-call tech. The number is 555-0100. During business hours, we transfer to our dispatch department.
+
+Agent: Do you use any specific software systems?
+
+Client: Yeah, we use ServiceTrade for work orders and scheduling. But here's the thing - we don't want emergency sprinkler calls creating tickets in ServiceTrade automatically. Those need to go straight to the on-call person.
+
+Agent: Got it. What happens if the transfer doesn't go through?
+
+Client: That's a problem we have now. If the on-call tech doesn't answer, callers just get stuck. We need the system to take their info and promise a callback within 15 minutes.
+
+Agent: Makes sense. Anything else important?
+
+Client: We're located at 123 Main Street in Springfield, Illinois. And we get a lot of false alarms, so the agent should probably confirm it's a real emergency before routing.
+
+Agent: Perfect, I think we have what we need for the demo.

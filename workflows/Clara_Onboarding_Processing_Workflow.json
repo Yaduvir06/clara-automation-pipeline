@@ -1,0 +1,276 @@
+{
+  "name": "Clara Onboarding Processing Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "92e1e07f-6b70-4e1e-b0f6-5454f6589514",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "command": "dir /b data\\onboarding\\*.*"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "442288fb-ee00-4974-bb30-5475b1429ff8",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get the single output item from the Execute Command node\nconst item = $input.first();\n\n// 2. Grab the raw text from stdout, falling back to an empty string\nconst rawOutput = item.json.stdout || \"\";\n\n// 3. Split the giant text block by line breaks to get individual filenames\nconst filenames = rawOutput.split('\\n').map(name => name.trim()).filter(name => name !== \"\");\n\n// 4. Run your exact mapping logic on the clean list of filenames!\nreturn filenames.map((filename, index) => {\n  const accountId = \"ACC\" + String(index + 1).padStart(3, '0');\n  \n  // Your clever file type detection\n  const isJson = filename.endsWith('.json');\n  \n  return {\n    json: {\n      filename: filename,\n      account_id: accountId,\n      file_path: `data/onboarding/${filename}`,\n      file_type: isJson ? 'json' : 'transcript',\n      mode: 'onboard'\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "9e245cce-d7f2-4407-ae14-89c87cd89373",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        660,
+        0
+      ],
+      "id": "9398b5ee-effe-49da-8d1c-5a0fa1ca9a6d",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ],
+      "id": "34693f84-0748-414d-a1b3-d0ec81732b95"
+    },
+    {
+      "parameters": {
+        "command": "=python scripts/process_onboarding_form.py \"{{ $json.file_path }}\" {{ $json.account_id }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        -260
+      ],
+      "id": "95ece1b9-b894-4c5e-80b1-9660949494c3",
+      "name": "Execute Command1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2d5c5d1e-c646-4bf2-acd7-c2d5ea32b280",
+              "name": "status",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "ea7df564-75d3-4dbe-a643-7cf1693e125d",
+              "name": "account_id",
+              "value": "={{ $json.account_id }}",
+              "type": "string"
+            },
+            {
+              "id": "aa54b2dc-6c96-43bf-81d9-82413055b81d",
+              "name": "message",
+              "value": "=v2 created for {{ $json.account_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1560,
+        -120
+      ],
+      "id": "c44ae340-b3e6-45e9-9da6-bf393db4c3ac",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "49a53133-3202-45a4-b3c3-7dec72de30ce",
+              "leftValue": "={{ $json.file_type }}",
+              "rightValue": "json",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        820,
+        -280
+      ],
+      "id": "898ae5a0-9181-46bd-b5e1-1b8b57a215bd",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "command": "=python scripts/pipeline.py onboard \"{{ $json.file_path }}\" {{ $json.account_id }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        -100
+      ],
+      "id": "5eae129a-84b5-4c03-86af-da9e4cfead20",
+      "name": "Execute Command2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Command2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "28b6f446-9f10-4f91-84ff-5a0cc7e03578",
+  "meta": {
+    "instanceId": "e7689950ae95c38f434ede3ca4ffc24d5661a710693e62861dacffbb4d5a6a46"
+  },
+  "id": "Xv4W4730woqaTG36",
+  "tags": []
+}

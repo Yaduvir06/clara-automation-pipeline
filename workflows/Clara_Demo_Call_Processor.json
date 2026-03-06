@@ -1,0 +1,201 @@
+{
+  "name": "Clara Demo Call Processor",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "84e0fdba-e074-43bf-a22c-e1b2fe4da333",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "command": "dir /b data\\demo\\*.txt"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "80b04680-8222-4c52-b522-d8683c6340ed",
+      "name": "List Demo Files",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the single output item from the Execute Command node\nconst item = $input.first();\n\n// Grab the raw text from stdout, falling back to an empty string if undefined\nconst rawOutput = item.json.stdout || \"\";\n\n// Split the giant text block by line breaks, trim spaces, and remove any empty lines\nconst filenames = rawOutput.split('\\n').map(name => name.trim()).filter(name => name !== \"\");\n\n// Process each file and generate the exact JSON structure n8n expects\nreturn filenames.map((filename, index) => {\n  const accountId = \"ACC\" + String(index + 1).padStart(3, '0');\n  \n  return {\n    json: {\n      filename: filename,\n      account_id: accountId,\n      transcript_path: `data/demo/${filename}`,\n      mode: 'demo'\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ],
+      "id": "8d01d40e-4bb4-4ff9-8d50-da5a8bcb2b00",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        620,
+        0
+      ],
+      "id": "22ee876b-00ee-4dbc-91aa-b89ddab6dcb7",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        840,
+        0
+      ],
+      "id": "f4cca81e-163b-4e69-a122-85aba1d12224"
+    },
+    {
+      "parameters": {
+        "command": "=python scripts/pipeline.py demo \"{{ $json.transcript_path }}\" {{ $json.account_id }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -160
+      ],
+      "id": "b2afc553-cf0d-403d-9c70-347c95d07143",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec21b921-748f-451e-86af-9858e04edc9d",
+              "name": "status",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "f9e0a275-f7b9-4da1-acd7-622bf2a17c06",
+              "name": "account_id",
+              "value": "={{ $json.account_id }}",
+              "type": "string"
+            },
+            {
+              "id": "12d3171b-4c9f-4072-a3d4-9699d92306d8",
+              "name": "message",
+              "value": "=v1 created for {{ $json.account_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1000,
+        -160
+      ],
+      "id": "502dce34-d04f-42a6-8be1-1fabb6da62ea",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "List Demo Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Demo Files": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dbf4b15d-05c2-4afd-8143-141404d5ce30",
+  "meta": {
+    "instanceId": "e7689950ae95c38f434ede3ca4ffc24d5661a710693e62861dacffbb4d5a6a46"
+  },
+  "id": "vEarBjvlAx4MLpB3",
+  "tags": []
+}

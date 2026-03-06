@@ -1,0 +1,37 @@
+{
+  "account_id": "ACC001",
+  "company_name": "Springfield Fire Protection",
+  "version": "v2",
+  "business_hours": {
+    "timezone": "America/Chicago",
+    "schedule": [
+      {
+        "days": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "open": "08:00",
+        "close": "17:00"
+      }
+    ]
+  },
+  "emergency_routing_rules": {
+    "primary_contact": "On-call technician - Mike Johnson",
+    "transfer_number": "555-0100",
+    "transfer_timeout_seconds": 45,
+    "fallback_action": "If unable to connect, take full details and emergency dispatch will call back within 10 minutes"
+  },
+  "call_transfer_rules": {
+    "timeout_seconds": 45,
+    "max_retries": 2,
+    "failure_message": "I'm unable to reach our emergency team right now. I have all your information and dispatch will contact you within 10 minutes."
+  },
+  "integration_constraints": [
+    "Do not create work orders in ServiceTrade for emergency sprinkler calls",
+    "All emergency calls must be logged in dispatch system manually"
+  ],
+  "questions_or_unknowns": []
+}

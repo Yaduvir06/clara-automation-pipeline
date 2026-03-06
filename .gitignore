@@ -1,0 +1,28 @@
+.env
+__pycache__/
+*.pyc
+
+
+# Environment
+.env
+claravenv
+
+# Outputs (optional - )
+# outputs/
+test_output.json
+test_output_v2.json
+test_agent_spec.json
+test_changelog.json
+
+# n8n
+.n8n/
+
+# OS
+.DS_Store
+
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

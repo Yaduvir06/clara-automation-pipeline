@@ -1,0 +1,51 @@
+{
+  "account_id": "ACC001",
+  "company_name": "Springfield Fire Protection",
+  "version": "v1",
+  "business_hours": {
+    "timezone": "EST",
+    "schedule": [
+      {
+        "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "open": "08:00",
+        "close": "17:00"
+      }
+    ]
+  },
+  "office_address": "123 Main St, Springfield, IL",
+  "services_supported": [
+    "fire sprinkler installation",
+    "sprinkler inspections",
+    "fire alarm systems"
+  ],
+  "emergency_definition": [
+    "sprinkler leak",
+    "fire alarm triggered",
+    "system failure"
+  ],
+  "emergency_routing_rules": {
+    "primary_contact": "On-call technician",
+    "transfer_number": "555-0100",
+    "transfer_timeout_seconds": 60,
+    "fallback_action": "Take message, dispatch will call back within 15 minutes"
+  },
+  "non_emergency_routing_rules": {
+    "action": "collect details and schedule callback during business hours",
+    "transfer_number": null
+  },
+  "call_transfer_rules": {
+    "timeout_seconds": 60,
+    "max_retries": 1,
+    "failure_message": "I apologize, I'm unable to reach our team right now. I've recorded your information and someone will call you back shortly."
+  },
+  "integration_constraints": [
+    "Do not create work orders in ServiceTrade for sprinkler emergencies"
+  ],
+  "after_hours_flow_summary": "For emergencies, collect caller info and address, attempt transfer to on-call. For non-emergencies, collect details and confirm callback during business hours.",
+  "office_hours_flow_summary": "Identify emergency vs routine, collect caller info, transfer to appropriate department or take message.",
+  "questions_or_unknowns": [
+    "Exact after-hours transfer number not confirmed",
+    "Timezone assumption needs verification"
+  ],
+  "notes": "Client mentioned they get frequent false alarms - may need special handling logic"
+}

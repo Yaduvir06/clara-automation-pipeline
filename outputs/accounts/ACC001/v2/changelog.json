@@ -1,0 +1,67 @@
+{
+  "account_id": "ACC001",
+  "company_name": "Springfield Fire Protection",
+  "updated_at": "2026-03-06T12:08:37.868133Z",
+  "from_version": "v1",
+  "to_version": "v2",
+  "summary": [
+    "Updated version: 'v1' \u2192 'v2'",
+    "Updated emergency_routing_rules['primary_contact: 'on-call technician' \u2192 'On-call technician - Mike Johnson'",
+    "Updated emergency_routing_rules['transfer_timeout_seconds: '60' \u2192 '45'",
+    "Updated emergency_routing_rules['fallback_action: 'promise callback within 15 minutes' \u2192 'If unable to connect, take full details and emergency dispatch will call back within 10 minutes'",
+    "Updated call_transfer_rules['timeout_seconds: '60' \u2192 '45'",
+    "Updated call_transfer_rules['max_retries: '1' \u2192 '2'",
+    "Updated integration_constraints[0]: 'never create sprinkler jobs in ServiceTrade' \u2192 'Do not create work orders in ServiceTrade for emergency sprinkler calls'",
+    "Changed type of business_hours['timezone",
+    "Changed type of call_transfer_rules['failure_message"
+  ],
+  "detailed_changes": {
+    "type_changes": {
+      "root['business_hours']['timezone']": {
+        "old_type": "NoneType",
+        "new_type": "str",
+        "old_value": null,
+        "new_value": "America/Chicago"
+      },
+      "root['call_transfer_rules']['failure_message']": {
+        "old_type": "NoneType",
+        "new_type": "str",
+        "old_value": null,
+        "new_value": "I'm unable to reach our emergency team right now. I have all your information and dispatch will contact you within 10 minutes."
+      }
+    },
+    "values_changed": {
+      "root['version']": {
+        "new_value": "v2",
+        "old_value": "v1"
+      },
+      "root['emergency_routing_rules']['primary_contact']": {
+        "new_value": "On-call technician - Mike Johnson",
+        "old_value": "on-call technician"
+      },
+      "root['emergency_routing_rules']['transfer_timeout_seconds']": {
+        "new_value": 45,
+        "old_value": 60
+      },
+      "root['emergency_routing_rules']['fallback_action']": {
+        "new_value": "If unable to connect, take full details and emergency dispatch will call back within 10 minutes",
+        "old_value": "promise callback within 15 minutes"
+      },
+      "root['call_transfer_rules']['timeout_seconds']": {
+        "new_value": 45,
+        "old_value": 60
+      },
+      "root['call_transfer_rules']['max_retries']": {
+        "new_value": 2,
+        "old_value": 1
+      },
+      "root['integration_constraints'][0]": {
+        "new_value": "Do not create work orders in ServiceTrade for emergency sprinkler calls",
+        "old_value": "never create sprinkler jobs in ServiceTrade"
+      }
+    },
+    "iterable_item_added": {
+      "root['integration_constraints'][1]": "All emergency calls must be logged in dispatch system manually"
+    }
+  }
+}

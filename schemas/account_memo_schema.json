@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["account_id", "company_name", "version"],
+  "properties": {
+    "account_id": {
+      "type": "string",
+      "description": "Unique identifier (e.g., ACC001)"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Business name"
+    },
+    "version": {
+      "type": "string",
+      "enum": ["v1", "v2"],
+      "description": "Configuration version"
+    },
+    "business_hours": {
+      "type": "object",
+      "properties": {
+        "timezone": {
+          "type": ["string", "null"],
+          "description": "e.g., America/New_York, EST, PST"
+        },
+        "schedule": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "days": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                }
+              },
+              "open": {
+                "type": "string",
+                "description": "24-hour format: 08:00"
+              },
+              "close": {
+                "type": "string",
+                "description": "24-hour format: 17:00"
+              }
+            }
+          }
+        }
+      }
+    },
+    "office_address": {
+      "type": ["string", "null"],
+      "description": "Physical address for emergency dispatch"
+    },
+    "services_supported": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "e.g., ['fire sprinkler', 'alarm systems', 'inspections']"
+    },
+    "emergency_definition": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Keywords that trigger emergency flow: ['leak', 'fire', 'alarm triggered']"
+    },
+    "emergency_routing_rules": {
+      "type": "object",
+      "properties": {
+        "primary_contact": {
+          "type": ["string", "null"],
+          "description": "Phone number or name to transfer to"
+        },
+        "transfer_number": {
+          "type": ["string", "null"],
+          "description": "Actual phone number for transfer"
+        },
+        "transfer_timeout_seconds": {
+          "type": ["integer", "null"],
+          "default": 60
+        },
+        "fallback_action": {
+          "type": ["string", "null"],
+          "description": "What to do if transfer fails"
+        }
+      }
+    },
+    "non_emergency_routing_rules": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": ["string", "null"],
+          "description": "e.g., 'collect info and schedule callback'"
+        },
+        "transfer_number": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "call_transfer_rules": {
+      "type": "object",
+      "properties": {
+        "timeout_seconds": {
+          "type": ["integer", "null"],
+          "default": 60
+        },
+        "max_retries": {
+          "type": ["integer", "null"],
+          "default": 1
+        },
+        "failure_message": {
+          "type": ["string", "null"],
+          "description": "What agent says if transfer fails"
+        }
+      }
+    },
+    "integration_constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Special rules: ['never create sprinkler jobs in ServiceTrade']"
+    },
+    "after_hours_flow_summary": {
+      "type": ["string", "null"],
+      "description": "High-level summary of after-hours behavior"
+    },
+    "office_hours_flow_summary": {
+      "type": ["string", "null"],
+      "description": "High-level summary of business hours behavior"
+    },
+    "questions_or_unknowns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of unclear or missing information"
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Any additional context"
+    }
+  }
+}
